@@ -1,15 +1,18 @@
 //const express = require("express");   // "type":"commonjs" by default it is in package.json
-import express from "express";  // "type": "module" in package.json file
+import express from "express"; // "type": "module" in package.json file
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-import cors from "cors"
+import cors from "cors";
+import { moviesRouter } from "./routes/movie.js";
+import { getMovieById, createMovies, updateMovieById, deleteMovieById, getAllMovies } from "./helper.js";
+
 dotenv.config();
 //console.log(process.env.MONGO_URL)
 const app = express();
 
 const PORT = process.env.PORT;
 //const PORT=4000
-const movies = [
+/* const movies = [
   {
     id: "100",
     name: "Iron man 2",
@@ -78,23 +81,23 @@ const movies = [
       "Remy, a rat, aspires to become a renowned French chef. However, he fails to realise that people despise rodents and will never enjoy a meal cooked by him.",
     trailer: "https://www.youtube.com/embed/NgsQ8mVkN8w",
   },
-];
-app.use(cors())
+]; */
+app.use(cors());
 app.use(express.json());
 
 //const MONGO_URL="mongodb://localhost";
-const MONGO_URL=process.env.MONGO_URL
+const MONGO_URL = process.env.MONGO_URL;
 async function createConnection() {
-  const client=new MongoClient(MONGO_URL);
+  const client = new MongoClient(MONGO_URL);
   await client.connect();
   console.log("Mongo is Connected👍");
   return client;
 }
-const client=await createConnection()
+export const client = await createConnection();
 
-  app.get('/', function (request, response) {
-    response.send('Hello World')
-})  
+app.get("/", function (request, response) {
+  response.send("Hello World");
+});
 
 /* app.get("/movies", function (request, response) {
   response.send(movies);
@@ -108,56 +111,9 @@ const client=await createConnection()
   response.send(movie);
 });  */
 
-app.get("/movies",async function (request, response) {
-  // find give cursor that is pagination, convert to array (toArray)
-  //find()  it retrieve all movies 135 movies from db
-  //filter | find
-  const movies=await client
-  .db("b30wd")
-  .collection("movies")
-  .find({}) 
-  .toArray()
-  response.send(movies);
-}); 
-
-app.put("/movies/:id",async function (request, response) {
-  console.log(request.params);
-  //db.movies.updateOne({id:"101"}, {$set: updatedata}) //  mongodb cmd
-  const { id } = request.params;
-  const updatedata=request.body
-  const result=await client.db("b30wd").collection("movies").updateOne({id:id},{$set:updatedata})
-  response.send(result);
-}); 
-
-app.delete("/movies/:id",async function (request, response) {
-  console.log(request.params);
-  //filter | find
-  //db.movies.deleteOne({id:"101"}) // this is in mongodb
-  const { id } = request.params;
-  //const movie = movies.find((mv) => mv.id === id);
-  const result=await client.db("b30wd").collection("movies").deleteOne({id:id})
-  response.send(result);
-}); 
-
-app.get("/movies/:id",async function (request, response) {
-  console.log(request.params);
-  //filter | find
-  const { id } = request.params;
-  //const movie = movies.find((mv) => mv.id === id);
-  const movie=await client.db("b30wd").collection("movies").findOne({id:id})
-  console.log(movie)
-  movie 
-  ? response.send(movie) 
-  : response.status(404).send({Message:"No such Movie Found🌝"})
-}); 
-
-app.post("/movies",async function (request, response) {
-  //db.movies.insertMany(data)
-  const data=request.body;
-  console.log(data)
-  const result=await client.db("b30wd").collection("movies").insertMany(data)
-  response.send(result);
-}); 
-  
-
+app.use('/movies',moviesRouter)
 app.listen(PORT, () => console.log(`server started in port ${PORT}`));
+
+
+
+
