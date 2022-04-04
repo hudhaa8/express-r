@@ -2,7 +2,7 @@
 import express from "express";  // "type": "module" in package.json file
 import { MongoClient } from "mongodb";
 import dotenv from "dotenv";
-
+import cors from "cors"
 dotenv.config();
 //console.log(process.env.MONGO_URL)
 const app = express();
@@ -79,7 +79,7 @@ const movies = [
     trailer: "https://www.youtube.com/embed/NgsQ8mVkN8w",
   },
 ];
-
+app.use(cors())
 app.use(express.json());
 
 //const MONGO_URL="mongodb://localhost";
