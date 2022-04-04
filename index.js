@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { moviesRouter } from "./routes/movie.js";
 import { getMovieById, createMovies, updateMovieById, deleteMovieById, getAllMovies } from "./helper.js";
+import bcrypt from "bcrypt"
 
 dotenv.config();
 //console.log(process.env.MONGO_URL)
@@ -115,5 +116,9 @@ app.use('/movies',moviesRouter)
 app.listen(PORT, () => console.log(`server started in port ${PORT}`));
 
 
-
-
+async function genPassword(password) {
+  const salt=await bcrypt.genSalt(10);
+  const hashPassword=await bcrypt.hash(password,salt);
+  console.log({salt,hashPassword})
+}
+genPassword("password@123")
