@@ -125,5 +125,3 @@ app.listen(PORT, () => console.log(`server started in port ${PORT}`));
   console.log({salt,hashPassword})
 }
 genPassword("password@123") */
-
-
