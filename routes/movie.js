@@ -7,8 +7,9 @@ import {
   deleteMovieById,
   getAllMovies,
 } from "../helper.js";
+import { auth } from "../middleware/auth.js";
 
-router.get("/", async function (request, response) {
+router.get("/", auth, async function (request, response) {
   // find give cursor that is pagination, convert to array (toArray)
   //find()  it retrieve all movies 135 movies from db
   //filter | find

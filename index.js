@@ -84,8 +84,8 @@ const PORT = process.env.PORT;
     trailer: "https://www.youtube.com/embed/NgsQ8mVkN8w",
   },
 ]; */
-app.use(cors());
-app.use(express.json());
+app.use(cors());     // third party middle ware
+app.use(express.json());  // inbuilt middle ware
 
 //const MONGO_URL="mongodb://localhost";
 const MONGO_URL = process.env.MONGO_URL;
